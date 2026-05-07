@@ -1,0 +1,267 @@
+# main.py
+# NCEA Numeracy Quiz - main program
+# Ben McKenzie 2026
+
+# These import extra tools I need:
+# tkinter lets me build the window and buttons
+# random is used to shuffle the questions so they appear in a different order each time
+# json lets me read the questions.json file
+import tkinter as tk
+import random
+import json
+
+# Open the questions file and load all the questions into a variable called QUESTIONS
+# "r" means read-only, and encoding="utf-8" makes sure special characters load correctly
+with open("questions.json", "r", encoding="utf-8") as f:
+    QUESTIONS = json.load(f)
+
+# These three variables keep track of where we are in the quiz
+# current_q = which question number we're on (starts at 0)
+# score = how many correct answers so far
+# questions = the shuffled list of questions for this quiz session
+current_q = 0
+score = 0
+questions = []
+
+# Create the main window and set it up
+# geometry sets the size (600 wide, 420 tall)
+# resizable(False, False) locks the size so it can't be dragged bigger or smaller
+# config sets the background colour to light blue
+window = tk.Tk()
+window.title("Numeracy Quiz")
+window.geometry("600x420")
+window.resizable(False, False)
+window.config(bg="lightblue")
+
+
+# --- HOME SCREEN ---
+# This function builds and displays the home/title screen
+def show_home():
+    # Loop through everything currently on the window and delete it
+    # This is how I "change screens" - I wipe what's there and draw new stuff
+    for widget in window.winfo_children():
+        widget.destroy()
+
+    window.config(bg="lightblue")
+
+    # This is a white rounded card that sits in the middle of the screen
+    # tk.Frame is like an invisible box I can put other widgets inside
+    # padx and pady add space inside the card so the text doesn't sit right on the edge
+    title_card = tk.Frame(window, bg="white", padx=30, pady=20)
+    title_card.pack(pady=(50, 20), ipadx=10, ipady=6)
+
+    # The main title text - placed inside title_card, not directly on the window
+    # bg="white" matches the card background so it blends in cleanly
+    tk.Label(title_card, text="NCEA Numeracy Co-Req Quiz",
+             font=("Arial", 20, "bold"), bg="white", fg="black").pack(pady=(0, 6))
+
+    # Subtitle showing which achievement standards this covers
+    tk.Label(title_card, text="Achievement Standards 91906 and 91907",
+             font=("Arial", 11), bg="white", fg="#333333").pack()
+
+    # Info line showing the question count and pass mark
+    tk.Label(title_card, text="20 questions  |  70% to pass",
+             font=("Arial", 10), bg="white", fg="#555555").pack(pady=(4, 0))
+
+    # The Start Quiz button - white background with black text and a border
+    # command=start_quiz means clicking it runs the start_quiz function
+    # relief="solid" adds a visible border around the button
+    # cursor="hand2" changes the mouse cursor to a hand when hovering over it
+    tk.Button(window, text="Start Quiz", command=start_quiz,
+              font=("Arial", 13, "bold"), width=14, pady=8,
+              bg="white", fg="black", relief="solid",
+              activebackground="#e8e8e8", cursor="hand2").pack()
+
+    # Footer label pinned to the bottom of the window with side="bottom"
+    tk.Label(window, text="Ben McKenzie - Numeracy Quiz",
+             font=("Arial", 8), bg="lightblue", fg="grey").pack(side="bottom", pady=8)
+
+
+# --- START / RESTART QUIZ ---
+# This function resets everything and kicks off a fresh quiz
+def start_quiz():
+    # global means I'm updating the variables defined at the top of the file
+    # without "global", Python would create new local variables instead
+    global current_q, score, questions
+    current_q = 0
+    score = 0
+    # random.sample shuffles all questions into a random order for each new quiz
+    questions = random.sample(QUESTIONS, len(QUESTIONS))
+    show_question()
+
+
+# --- QUIZ SCREEN ---
+# These are global variables that hold references to the widgets on the quiz screen
+# I set them to None here so Python knows they exist before show_question() runs
+question_label = None
+counter_label  = None
+options_frame  = None
+option_boxes   = []   # the white box frames that wrap each answer option
+radio_buttons  = []   # the actual clickable radio buttons inside those boxes
+selected       = None  # stores which answer the user has clicked
+error_label    = None  # shows a red message if they click Next without picking an answer
+next_button    = None
+
+
+# This function builds the quiz screen layout from scratch
+def show_question():
+    # Tell Python to use the global versions of these variables, not create new local ones
+    global question_label, counter_label, options_frame
+    global option_boxes, radio_buttons, selected, error_label, next_button
+
+    # Wipe the screen clean before drawing the quiz layout
+    for widget in window.winfo_children():
+        widget.destroy()
+
+    window.config(bg="lightblue")
+
+    # Label that will hold the question text
+    # wraplength=520 means long questions automatically wrap to the next line
+    question_label = tk.Label(window, text="", font=("Arial", 12), bg="lightblue",
+                               wraplength=520, justify="left")
+    question_label.pack(pady=(14, 2))
+
+    # Label that shows "Question X of 20" so the user knows their progress
+    counter_label = tk.Label(window, text="", font=("Arial", 10), bg="lightblue")
+    counter_label.pack()
+
+    # tk.StringVar() is a special tkinter variable tied to the radio buttons
+    # When the user clicks a radio button, selected automatically updates to that answer text
+    selected = tk.StringVar()
+
+    # A frame to group all 4 answer boxes together in one tidy block
+    options_frame = tk.Frame(window, bg="lightblue")
+    options_frame.pack(pady=8)
+
+    option_boxes  = []
+    radio_buttons = []
+
+    # Build 4 answer option boxes using a loop
+    for i in range(4):
+        # White bordered box around each answer
+        box = tk.Frame(options_frame, bg="white", bd=1, relief="solid",
+                       padx=10, pady=5)
+        box.pack(fill="x", padx=40, pady=3, ipadx=4)
+
+        # The radio button sits inside the white box
+        # variable=selected links all 4 buttons so only one can be selected at a time
+        # selectcolor is the highlight colour inside the circle when selected
+        rb = tk.Radiobutton(box, text="", variable=selected,
+                            bg="white", font=("Arial", 11),
+                            anchor="w", activebackground="white",
+                            selectcolor="#d0e8ff", cursor="hand2")
+        rb.pack(anchor="w", fill="x")
+
+        option_boxes.append(box)
+        radio_buttons.append(rb)
+
+    # Red error message - starts empty and only appears if they skip picking an answer
+    error_label = tk.Label(window, text="", fg="red", bg="lightblue", font=("Arial", 9))
+    error_label.pack(pady=(2, 2))
+
+    # The Next button - calls next_question() when clicked
+    next_button = tk.Button(window, text="Next", command=next_question,
+                            font=("Arial", 11), width=10, pady=5,
+                            bg="#4a90d9", fg="white", relief="flat",
+                            activebackground="#3a7bc8", cursor="hand2")
+    next_button.pack(pady=4)
+
+    tk.Label(window, text="Ben McKenzie - Numeracy Quiz",
+             font=("Arial", 8), bg="lightblue", fg="grey").pack(side="bottom", pady=6)
+
+    # Fill in the first question's content now that the layout is built
+    load_question()
+
+
+# This function fills the quiz screen with the current question's text and answer options
+# It doesn't rebuild the whole screen - it just updates the text inside existing widgets
+def load_question():
+    q = questions[current_q]
+
+    # Update the question label to show the current question text
+    question_label.config(text=f"Q{current_q + 1}. {q['question']}")
+
+    # Update the counter label e.g. "Question 3 of 20"
+    counter_label.config(text=f"Question {current_q + 1} of {len(questions)}")
+
+    # Clear the previous selection so nothing is pre-ticked on the new question
+    selected.set("")
+    error_label.config(text="")
+
+    # Loop through all 4 radio buttons and update their label and value for this question
+    for i, rb in enumerate(radio_buttons):
+        rb.config(text=q["options"][i], value=q["options"][i])
+
+
+# This function runs when the user clicks the Next button
+def next_question():
+    global current_q, score
+
+    # If no answer is selected, show the error message and stop (return exits the function early)
+    if selected.get() == "":
+        error_label.config(text="Please pick an answer!")
+        return
+
+    # Compare the selected answer to the correct answer from the JSON file
+    # If they match, add 1 to the score
+    if selected.get() == questions[current_q]["answer"]:
+        score += 1
+
+    # Move forward to the next question
+    current_q += 1
+
+    # If there are more questions left, load the next one
+    # Otherwise go to the results screen
+    if current_q < len(questions):
+        load_question()
+    else:
+        show_result()
+
+
+# --- RESULTS SCREEN ---
+# This function wipes the screen and shows the final score
+def show_result():
+    # Clear the screen
+    for widget in window.winfo_children():
+        widget.destroy()
+
+    total   = len(questions)
+    # Work out the percentage score and round it to a whole number
+    percent = round((score / total) * 100)
+
+    # Set the result message and text colour based on whether they passed (70%+)
+    if percent >= 70:
+        result_text   = f"You got {score}/{total}  ({percent}%)  -  PASSED!"
+        result_colour = "green"
+    else:
+        result_text   = f"You got {score}/{total}  ({percent}%)  -  FAILED"
+        result_colour = "red"
+
+    window.config(bg="lightblue")
+
+    tk.Label(window, text="Quiz Finished!", font=("Arial", 18, "bold"),
+             bg="lightblue").pack(pady=(50, 8))
+
+    # Display the score - colour changes to green or red depending on pass/fail
+    tk.Label(window, text=result_text, font=("Arial", 13),
+             fg=result_colour, bg="lightblue").pack(pady=8)
+
+    # Try Again reshuffles and restarts the quiz from question 1
+    tk.Button(window, text="Try Again", command=start_quiz,
+              font=("Arial", 11), width=12, pady=6,
+              bg="#4a90d9", fg="white", relief="flat",
+              activebackground="#3a7bc8", cursor="hand2").pack(pady=6)
+
+    # Home goes back to the title screen
+    tk.Button(window, text="Home", command=show_home,
+              font=("Arial", 11), width=12, pady=6,
+              relief="flat", cursor="hand2").pack()
+
+    tk.Label(window, text="Ben McKenzie - Numeracy Quiz",
+             font=("Arial", 8), bg="lightblue", fg="grey").pack(side="bottom", pady=6)
+
+
+# Run show_home() first so the title screen appears when the program starts
+# mainloop() keeps the window alive and responsive until the user closes it
+show_home()
+window.mainloop()
