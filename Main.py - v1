@@ -6,13 +6,23 @@
 # tkinter lets me build the window and buttons
 # random is used to shuffle the questions so they appear in a different order each time
 # json lets me read the questions.json file
+# os helps the program find the files on any computer (Mac or PC)
 import tkinter as tk
 import random
 import json
+import os
+
+# --- DYNAMIC FILE LOADING ---
+# This part makes the quiz work for "anyone"
+# It finds the folder where this script is currently saved
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# It joins that folder path with the filename "questions.json" 
+# so it doesn't matter if the user is in "Downloads" or "Desktop"
+json_path = os.path.join(script_dir, "questions.json")
 
 # Open the questions file and load all the questions into a variable called QUESTIONS
 # "r" means read-only, and encoding="utf-8" makes sure special characters load correctly
-with open("questions.json", "r", encoding="utf-8") as f:
+with open(json_path, "r", encoding="utf-8") as f:
     QUESTIONS = json.load(f)
 
 # These three variables keep track of where we are in the quiz
@@ -60,7 +70,7 @@ def show_home():
              font=("Arial", 11), bg="white", fg="#333333").pack()
 
     # Info line showing the question count and pass mark
-    tk.Label(title_card, text="20 questions  |  70% to pass",
+    tk.Label(title_card, text=f"{len(QUESTIONS)} questions  |  70% to pass",
              font=("Arial", 10), bg="white", fg="#555555").pack(pady=(4, 0))
 
     # The Start Quiz button - white background with black text and a border
