@@ -1,0 +1,102 @@
+[
+  {
+    "question": "What is 5/8 as a decimal?",
+    "options": ["0.625", "0.6", "0.65", "0.58"],
+    "answer": "0.625"
+  },
+  {
+    "question": "A jacket costs $120, 25% off. What is the sale price?",
+    "options": ["$90", "$95", "$100", "$80"],
+    "answer": "$90"
+  },
+  {
+    "question": "Class of 28, boys to girls ratio is 3:4. How many girls?",
+    "options": ["12", "14", "16", "18"],
+    "answer": "16"
+  },
+  {
+    "question": "Car travels 180km in 2hr 15min. Speed in km/h?",
+    "options": ["80 km/h", "85 km/h", "90 km/h", "95 km/h"],
+    "answer": "80 km/h"
+  },
+  {
+    "question": "Garden 8m x 5m, path 1m wide around it. Path area?",
+    "options": ["26 m²", "28 m²", "30 m²", "32 m²"],
+    "answer": "30 m²"
+  },
+  {
+    "question": "Solve: 3(x - 2) + 4 = 19",
+    "options": ["5", "6", "7", "8"],
+    "answer": "7"
+  },
+  {
+    "question": "Bag: 4 red, 5 blue, 6 green marbles. P(not blue)?",
+    "options": ["1/3", "2/5", "2/3", "3/5"],
+    "answer": "2/3"
+  },
+  {
+    "question": "What is 0.7% of 400?",
+    "options": ["2.8", "28", "0.28", "280"],
+    "answer": "2.8"
+  },
+  {
+    "question": "Scores: 72, 85, 91, 68. Need average of 80. What is the 5th score?",
+    "options": ["80", "82", "84", "86"],
+    "answer": "84"
+  },
+  {
+    "question": "Laptop $850 + 15% GST. Total?",
+    "options": ["$977.50", "$960", "$975", "$980"],
+    "answer": "$977.50"
+  },
+  {
+    "question": "Simplify: (3/4) divided by (1/2)",
+    "options": ["1.5", "2/3", "3/2", "1/3"],
+    "answer": "3/2"
+  },
+  {
+    "question": "Population goes from 12000 to 13200. Percentage increase?",
+    "options": ["8%", "9%", "10%", "12%"],
+    "answer": "10%"
+  },
+  {
+    "question": "Cyclist: 12km/h for 30min then 18km/h for 20min. Total distance?",
+    "options": ["12 km", "15 km", "18 km", "20 km"],
+    "answer": "12 km"
+  },
+  {
+    "question": "Recipe: 3 cups flour per 2 cups sugar. Sugar needed for 4.5 cups flour?",
+    "options": ["2 cups", "2.5 cups", "3 cups", "3.5 cups"],
+    "answer": "3 cups"
+  },
+  {
+    "question": "Volume of cylinder, radius=3cm, height=10cm. (pi = 3.14)",
+    "options": ["282.6 cm³", "94.2 cm³", "314 cm³", "188.4 cm³"],
+    "answer": "282.6 cm³"
+  },
+  {
+    "question": "Mean of 5 numbers is 12. Remove one, mean becomes 10. What was removed?",
+    "options": ["16", "18", "20", "22"],
+    "answer": "20"
+  },
+  {
+    "question": "$40 item marked up 30% then discounted 20%. Final price?",
+    "options": ["$41.60", "$42.40", "$44.00", "$43.20"],
+    "answer": "$41.60"
+  },
+  {
+    "question": "Solve the inequality: 2x - 5 > 7",
+    "options": ["x > 6", "x < 6", "x > 5", "x < 5"],
+    "answer": "x > 6"
+  },
+  {
+    "question": "Spinner with 8 sectors numbered 1-8. P(prime number)?",
+    "options": ["1/2", "3/8", "5/8", "1/4"],
+    "answer": "1/2"
+  },
+  {
+    "question": "Rectangle has length 12cm and diagonal 13cm. What is the width?",
+    "options": ["5 cm", "6 cm", "7 cm", "8 cm"],
+    "answer": "5 cm"
+  }
+]
