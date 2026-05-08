@@ -16,7 +16,7 @@ import os
 # This part finds the folder where this script is saved and looks for questionsV4.json there
 # This prevents "File Not Found" errors on different computers
 script_dir = os.path.dirname(os.path.abspath(__file__))
-json_path = os.path.join(script_dir, "questionsV4.json")
+json_path = os.path.join(script_dir, "QuestionsV4.json")
 
 with open(json_path, "r", encoding="utf-8") as f:
     QUESTIONS = json.load(f)
@@ -178,9 +178,9 @@ def show_question():
 
         # tristatevalue="x" is a trick to stop Mac computers from showing a blue minus sign
         rb = tk.Radiobutton(box, text="", variable=selected,
-                            bg="white", fg="black", font=(FONT_NAME, 12),
-                            anchor="w", activebackground="white", activeforeground="black",
-                            selectcolor="black", cursor="hand2",
+                            bg="white", fg="white", font=(FONT_NAME, 12),
+                            anchor="w", activebackground="white", activeforeground="white",
+                            selectcolor="white", cursor="hand2",
                             tristatevalue="x")
         rb.pack(anchor="w", fill="x")
 
